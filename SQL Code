@@ -1,0 +1,33 @@
+-- CREATE DATABASE unicorn_companies;
+USE unicorn_companies;
+
+-- drop table unicorns;
+CREATE TABLE IF NOT EXISTS unicorns (id INT AUTO_INCREMENT PRIMARY KEY, company VARCHAR(100), country VARCHAR(100), valuation DECIMAL(10,2), sector VARCHAR(100), founded_year INT, investor VARCHAR(100));
+
+-- setting permissions to access file from PC
+SET GLOBAL local_infile = 1;
+SHOW VARIABLES LIKE 'local_infile';
+
+-- Loading data
+LOAD DATA LOCAL INFILE 'C:/Users/PC/Downloads/companies_1000.csv'
+INTO TABLE unicorns
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"' 
+LINES TERMINATED BY '\n' 
+IGNORE 1 LINES
+(company, country, sector, valuation, founded_year, investor);
+
+----- Top 5 Countries by Number of Unicorns------
+Select count(country), country from unicorns group by country order by count(country) desc; 
+
+----- Top 3 Sectors by Average Valuation 
+select sector, avg(valuation) from unicorns group by sector order by avg(valuation) desc limit 3;
+
+----- Unicorns Founded After 2010 
+select company, founded_year from unicorns where founded_year>2010;
+
+----- Total Valuation of Unicorns in the FinTech Sector 
+select sum(valuation), sector from unicorns group by sector having sector='FinTech';
+
+----- Most Common Investors
+Select count(investor), investor from unicorns group by investor order by count(investor) desc limit 5;
