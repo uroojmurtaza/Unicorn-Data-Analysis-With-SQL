@@ -4,7 +4,7 @@ USE unicorn_companies;
 -- drop table unicorns;
 CREATE TABLE IF NOT EXISTS unicorns (id INT AUTO_INCREMENT PRIMARY KEY, company VARCHAR(100), country VARCHAR(100), valuation DECIMAL(10,2), sector VARCHAR(100), founded_year INT, investor VARCHAR(100));
 
--- setting permissions to access file from PC
+-- setting permissions to acess file from PC
 SET GLOBAL local_infile = 1;
 SHOW VARIABLES LIKE 'local_infile';
 
@@ -31,3 +31,18 @@ select sum(valuation), sector from unicorns group by sector having sector='FinTe
 
 ----- Most Common Investors
 Select count(investor), investor from unicorns group by investor order by count(investor) desc limit 5;
+
+----- Trend Analysis, growth of unicorns in specific sectors/countries ----
+select count(company), country, sector, founded_year from unicorns group by country, sector, founded_year order by country, founded_year desc;
+
+-------- Compare valuations of companies founded in different decades to understand growth trends ----\
+select sector, case 
+when founded_year between 1990 and 1999 then '1990s'
+when founded_year between 2000 and 2009 then '2000s'
+when founded_year between 2010 and 2019 then '2010s'
+when founded_year between 2020 and 2022 then '2020s'
+end as decades,
+count(*)
+from unicorns
+group by decades, sector
+order by decades desc;
