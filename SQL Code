@@ -1,10 +1,9 @@
 -- CREATE DATABASE unicorn_companies;
 USE unicorn_companies;
 
--- drop table unicorns;
 CREATE TABLE IF NOT EXISTS unicorns (id INT AUTO_INCREMENT PRIMARY KEY, company VARCHAR(100), country VARCHAR(100), valuation DECIMAL(10,2), sector VARCHAR(100), founded_year INT, investor VARCHAR(100));
 
--- setting permissions to acess file from PC
+-- setting permissions to access file from PC
 SET GLOBAL local_infile = 1;
 SHOW VARIABLES LIKE 'local_infile';
 
