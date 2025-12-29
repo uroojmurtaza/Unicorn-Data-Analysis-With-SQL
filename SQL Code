@@ -1,47 +1,26 @@
--- CREATE DATABASE unicorn_companies;
+CREATE DATABASE unicorn_companies;
+-- drop table unicorns;
 USE unicorn_companies;
+Create Table unicorns (Company VARCHAR(50), Post_Money_Value_B INTEGER, Total_Equity_Funding_B INTEGER, Lead_Investors_Include VARCHAR(50), Country VARCHAR(50), Continent VARCHAR(50));
 
-CREATE TABLE unicorns (id INT AUTO_INCREMENT PRIMARY KEY, company VARCHAR(100), country VARCHAR(100), valuation DECIMAL(10,2), sector VARCHAR(100), founded_year INT, investor VARCHAR(100));
-
--- setting permissions to access the file from the PC
+-- setting permissions to acess file from PC
 SET GLOBAL local_infile = 1;
 SHOW VARIABLES LIKE 'local_infile';
 
 -- Loading data
-LOAD DATA LOCAL INFILE 'C:/Users/PC/Downloads/companies_1000.csv'
-INTO TABLE unicorns
-FIELDS TERMINATED BY ',' 
-ENCLOSED BY '"' 
-LINES TERMINATED BY '\n' 
-IGNORE 1 LINES
-(company, country, sector, valuation, founded_year, investor);
+LOAD DATA LOCAL INFILE 'C:/Users/PC/OneDrive/Documents/Atomcamp - DA Bootcamp Projects/SQL/Project 1/Data and Manual/Unicorns 2025 - Crunchbase.csv'
+INTO TABLE unicorns FIELDS TERMINATED BY ','
+ENCLOSED BY '"'  LINES TERMINATED BY '\n'  IGNORE 1 LINES 
+(Company, Post_Money_Value_B, Total_Equity_Funding_B, Lead_Investors_Include, Country, Continent);
 
 ----- Top 5 Countries by Number of Unicorns------
 Select count(country), country from unicorns group by country order by count(country) desc; 
 
 ----- Top 3 Sectors by Average Valuation 
-select sector, avg(valuation) from unicorns group by sector order by avg(valuation) desc limit 3;
-
------ Unicorns Founded After 2010 
-select company, founded_year from unicorns where founded_year>2010;
-
------ Total Valuation of Unicorns in the FinTech Sector 
-select sum(valuation), sector from unicorns group by sector having sector='FinTech';
+select country, avg(Post_Money_Value_B) from unicorns group by country order by avg(Post_Money_Value_B) desc limit 3;
 
 ----- Most Common Investors
-Select count(investor), investor from unicorns group by investor order by count(investor) desc limit 5;
+Select count(Lead_Investors_Include), Lead_Investors_Include from unicorns group by Lead_Investors_Include order by count(Lead_Investors_Include) desc limit 5;
 
------ Trend Analysis, growth of unicorns in specific sectors/countries ----
-select count(company), country, sector, founded_year from unicorns group by country, sector, founded_year order by country, founded_year desc;
-
--------- Compare valuations of companies founded in different decades to understand growth trends ----\
-select sector, case 
-when founded_year between 1990 and 1999 then '1990s'
-when founded_year between 2000 and 2009 then '2000s'
-when founded_year between 2010 and 2019 then '2010s'
-when founded_year between 2020 and 2022 then '2020s'
-end as decades,
-count(*)
-from unicorns
-group by decades, sector
-order by decades desc;
+----- Total Valuation of unicorns in specific countries -----
+select count(company), country, sum(Post_Money_Value_B) from unicorns group by country order by sum(Post_Money_Value_B) desc;
