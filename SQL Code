@@ -16,7 +16,7 @@ ENCLOSED BY '"'  LINES TERMINATED BY '\n'  IGNORE 1 LINES
 ----- Top 5 Countries by Number of Unicorns------
 Select count(country), country from unicorns group by country order by count(country) desc; 
 
------ Top 3 Sectors by Average Valuation 
+----- Top 3 Countries by Average Valuation 
 select country, avg(Post_Money_Value_B) from unicorns group by country order by avg(Post_Money_Value_B) desc limit 3;
 
 ----- Most Common Investors
